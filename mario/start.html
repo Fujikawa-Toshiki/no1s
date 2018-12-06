@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8">
+		<title>GUIを用いたアニメーションとイベント駆動処理の作成</title>
+		<style>
+			#canvas1 {
+				border: 1px solid #333;
+				background-color: 
+			}
+		</style>
+	</head>
+	<body>
+		<p>操作方法</p>
+		<p>矢印キー→: 右へ動く</p>
+		<p>矢印キー←: 左へ動く</p>
+		<p id="message"></p>
+		<canvas id="canvas1" width="200" height="80">
+		  Canvas 対応のブラウザを使用して下さい。
+		</canvas>
+
+		<script>
+			(function(){
+				var canvas1 = document.getElementById("canvas1");
+				var ctx = canvas1.getContext("2d");
+				var x = 55;
+				var y = 0;
+				var MAX_X = 200;
+				var MAX_Y = 80;
+				var xLeftMax = -10;
+				var xRightMax = 130;
+				var cnt=0;
+				var pathList = [
+					"images/mario_1.png",
+					"images/mario_2.png",
+					"images/mario_3.png",
+					"images/mario_4.png",
+					"images/mario_5.png",
+					"images/mario_6.png"
+				];
+				
+				window.onload = function(){
+				standRight();
+				}
+				
+				// キーを押したとき
+				document.onkeydown = keydown;
+				function keydown(e){
+					// キー入力した際のデフォルト無効
+					e.preventDefault();
+					var target = document.getElementById("message");
+					if(e.keyCode === 37){
+						if(x > xLeftMax){
+							
+							clearImage(x, y);
+							runLeft();
+							x -= 10;
+						}
+					} else if(e.keyCode === 39){
+						if(x < xRightMax){
+							
+							clearImage(x, y);
+							runRight();
+							x += 10;
+						}
+					}
+				}
+				
+				// キーを離したとき
+				document.onkeyup = keyup;
+				function keyup(e){
+					if(e.keyCode === 37){
+						clearImage(x, y);
+						standLeft();
+					} else if(e.keyCode === 39){
+						clearImage(x, y);
+						standRight();
+					}
+				}
+				
+				// 描画のクリア
+				function clearImage(x, y){
+					ctx.clearRect(0, 0, MAX_X, MAX_Y);
+					ctx.save();
+					ctx.translate(x, y);
+				}
+				
+				// 右へ走る画像を描画
+				function runRight(){
+					if (cnt >= 2) {
+						cnt = 1;
+					} else {
+						cnt++;
+					}
+					// Imageオブジェクトを生成
+					var img = new Image();
+					img.src = pathList[cnt];
+					// 画像を描画
+					ctx.drawImage(img, 0, 0);
+					ctx.restore();
+				}
+				
+				// 左へ走る画像を描画
+				function runLeft(){
+					if (cnt >= 5) {
+						cnt = 4;
+					} else {
+						cnt++;
+					}
+					// Imageオブジェクトを生成
+					var img = new Image();
+					img.src = pathList[cnt];
+					// 画像を描画
+					ctx.drawImage(img, 0, 0);
+					ctx.restore();
+				}
+				
+				// 右向きで立つ画像を描画
+				function standRight(){
+					// Imageオブジェクトを生成
+					var img = new Image();
+					img.src = pathList[0];
+					// 画像を描画
+					ctx.drawImage(img, 0, 0);
+					ctx.restore()
+				}
+				
+				// 左向きで立つ画像を描画
+				function standLeft(){
+					// Imageオブジェクトを生成
+					var img = new Image();
+					img.src = pathList[3];
+					// 画像を描画
+					ctx.drawImage(img, 0, 0);
+					ctx.restore()
+				}
+			})();
+		</script>
+	</body>
+</html>
